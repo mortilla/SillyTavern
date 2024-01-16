@@ -301,7 +301,7 @@ export function formatInstructModeSystemPrompt(systemPrompt){
  * @param {string} name2 Character name.
  * @returns {string} Formatted example messages string.
  */
-export function formatInstructModeExamples(mesExamples, name1, name2) {
+export function _formatInstructModeExamples(mesExamples, name1, name2) {
     const includeNames = power_user.instruct.names || (!!selected_group && power_user.instruct.names_force_groups);
 
     let inputSequence = power_user.instruct.input_sequence;
@@ -317,6 +317,18 @@ export function formatInstructModeExamples(mesExamples, name1, name2) {
 
     mesExamples = mesExamples.replace(new RegExp(`\n${name1}: `, 'gm'), separatorSequence + inputSequence + separator + (includeNames ? `${name1}: ` : ''));
     mesExamples = mesExamples.replace(new RegExp(`\n${name2}: `, 'gm'), separator + outputSequence + separator + (includeNames ? `${name2}: ` : ''));
+
+    return mesExamples;
+}
+
+export function formatInstructModeExamples(mesExamples, name1, name2) {
+    const includeNames = power_user.instruct.names || (!!selected_group && power_user.instruct.names_force_groups);
+	if (includeNames) {
+		return mesExamples;
+	}
+
+    mesExamples = mesExamples.replace(new RegExp(`\n${name1}: `, 'gm'), `\nInput: `);
+    mesExamples = mesExamples.replace(new RegExp(`\n${name2}: `, 'gm'), `\nReply: `);
 
     return mesExamples;
 }
